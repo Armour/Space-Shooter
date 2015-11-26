@@ -3,19 +3,30 @@ using System.Collections;
 
 [System.Serializable]
 public class Boundary {
-	public float xMin, xMax, zMin, zMax;
+	public float xMin = -6.0f, xMax = 6.0f, zMin = -4.0f, zMax = 8.0f;
 }
 
 public class PlayerController : MonoBehaviour {
 
-	public float speed;
-	public float tilt;
+	public float speed = 10.0f;
+	public float tilt = 4.0f;
 	public Boundary boundary;
-
+	public GameObject shot;
+	public Transform shotSpawn;
+	public float fireRate = 0.5f;
+	
 	private Rigidbody rb;
+	private float nextFire = 0.0f;
 
 	void Start() {
 		rb = GetComponent<Rigidbody>();
+	}
+
+	void Update() {
+		if (Input.GetButton("Fire1") && Time.time > nextFire) {
+			nextFire = Time.time + fireRate;
+			Instantiate(shot, shotSpawn.position, shotSpawn.rotation);
+		}
 	}
 
 	void FixedUpdate() {
