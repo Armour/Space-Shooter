@@ -25,18 +25,31 @@ public class PlayerController : MonoBehaviour {
 	}
 
 	void Update() {
-		if (Input.GetButton("Fire1") && Time.time > nextFire) {
-			nextFire = Time.time + fireRate;
-			Instantiate(shot, shotSpawn.position, shotSpawn.rotation);
-			ad.Play();
+		if (SystemInfo.deviceType == DeviceType.Desktop) {
+			if (Input.GetButton("Fire1") && Time.time > nextFire) {
+				nextFire = Time.time + fireRate;
+				Instantiate(shot, shotSpawn.position, shotSpawn.rotation);
+				ad.Play();
+			}
+		} else {
+			if ((Input.GetTouch(0).position != null) && Time.time > nextFire) {
+				nextFire = Time.time + fireRate;
+				Instantiate(shot, shotSpawn.position, shotSpawn.rotation);
+				ad.Play();
+			}
 		}
 	}
 
 	void FixedUpdate() {
-		float moveHorizontal = Input.GetAxis("Horizontal");
-		float moveVertical = Input.GetAxis("Vertical");
+		Vector3 movement;
+		if (SystemInfo.deviceType == DeviceType.Desktop) { 
+			float moveHorizontal = Input.GetAxis("Horizontal");
+			float moveVertical = Input.GetAxis("Vertical");
+			movement = new Vector3(moveHorizontal, 0.0f, moveVertical);
+		} else {
+			movement = new Vector3 (Input.acceleration.x, 0.0f, Input.acceleration.y);
+		}
 
-		Vector3 movement = new Vector3(moveHorizontal, 0.0f, moveVertical);
 		rb.velocity = movement * speed;
 
 		rb.position = new Vector3(
