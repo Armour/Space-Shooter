@@ -32,7 +32,7 @@ public class PlayerController : MonoBehaviour {
 				ad.Play();
 			}
 		} else {
-			if ((Input.GetTouch(0).position != null) && Time.time > nextFire) {
+			if (Time.time > nextFire) {
 				nextFire = Time.time + fireRate;
 				Instantiate(shot, shotSpawn.position, shotSpawn.rotation);
 				ad.Play();

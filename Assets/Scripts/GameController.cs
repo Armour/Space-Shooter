@@ -36,7 +36,7 @@ public class GameController : MonoBehaviour {
 					SceneManager.LoadScene("Main");
 				}
 			} else {				
-				if (Input.GetTouch(0).position != null) {
+				if (Input.GetButton("Fire1")) {
 					SceneManager.LoadScene("Main");
 				}
 			}
@@ -56,7 +56,13 @@ public class GameController : MonoBehaviour {
 			yield return new WaitForSeconds(waveWait);
 
 			if (gameOver) {
-				restartText.text = "Press 'R' for Restart";
+				if (SystemInfo.deviceType == DeviceType.Desktop) {
+					gameOverText.text = "";
+					restartText.text = "Press 'R' for Restart";
+				} else {				
+					gameOverText.text = "";
+					restartText.text = "Touch for Restart";
+				}
 				restart = true;
 				break;
 			}
