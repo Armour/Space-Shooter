@@ -1,85 +1,105 @@
 ﻿using UnityEngine;
-using System.Collections;
 using UnityEngine.SceneManagement;
+using System.Collections;
+using TMPro;
 
-public class GameController : MonoBehaviour {
+public class GameController : MonoBehaviour
+{
 
-	public GameObject[] hazards;
-	public Vector3 spawnValues;
-	public int hazardCount;
-	public float spawnWait;
-	public float startWait;
-	public float waveWait;
-	public bool hardMode;
-	[HideInInspector] public bool gameOver;
-	
-	public GUIText scoreText;
-	public GUIText restartText;
-	public GUIText gameOverText;
-	private int score;
-	private bool restart;
+    public GameObject[] hazards;
+    public Vector3 spawnValues;
+    public int hazardCount;
+    public float spawnWait;
+    public float startWait;
+    public float waveWait;
+    public bool hardMode;
+    [HideInInspector] public bool gameOver;
 
-	void Start() {
-		restart = false;
-		gameOver = false;
-		restartText.text = "";
-		gameOverText.text = "";
-		score = 0;
-		UpdateScore();
-		StartCoroutine("SpawnWaves");
-	}
+	[SerializeField] public TextMeshProUGUI scoreText;
+	[SerializeField] public TextMeshProUGUI restartText;
+	[SerializeField] public TextMeshProUGUI gameOverText;
+    private int score;
+    private bool restart;
 
-	void Update() {
-		if (restart) {		
-			if (SystemInfo.deviceType == DeviceType.Desktop) {
-				if (Input.GetKeyDown(KeyCode.R)) {
-					SceneManager.LoadScene("Main");
-				}
-			} else {				
-				if (Input.GetButton("Fire1")) {
-					SceneManager.LoadScene("Main");
-				}
-			}
-		}
-	}
+    void Start()
+    {
+        restart = false;
+        gameOver = false;
+        restartText.text = "";
+        gameOverText.text = "";
+        score = 0;
+        UpdateScore();
+        StartCoroutine("SpawnWaves");
+    }
 
-	private IEnumerator SpawnWaves() {
-		yield return new WaitForSeconds (startWait);
-		while (true) {
-			for (int i = 0; i < hazardCount; i++) {
-				Vector3 spawnPosition = new Vector3(Random.Range(-spawnValues.x, spawnValues.x), spawnValues.y, spawnValues.z);
-				Quaternion spawnRotation = Quaternion.identity;
-				GameObject hazard = hazards[Random.Range(0, hazards.Length)];
-				Instantiate(hazard, spawnPosition, spawnRotation);
-				yield return new WaitForSeconds(spawnWait);
-			}
-			yield return new WaitForSeconds(waveWait);
+    void Update()
+    {
+        if (restart)
+        {
+            if (SystemInfo.deviceType == DeviceType.Desktop)
+            {
+                if (Input.GetKeyDown(KeyCode.R))
+                {
+                    SceneManager.LoadScene("Main");
+                }
+            }
+            else
+            {
+                if (Input.GetButton("Fire1"))
+                {
+                    SceneManager.LoadScene("Main");
+                }
+            }
+        }
+    }
 
-			if (gameOver) {
-				if (SystemInfo.deviceType == DeviceType.Desktop) {
-					gameOverText.text = "";
-					restartText.text = "Press 'R' for Restart";
-				} else {				
-					gameOverText.text = "";
-					restartText.text = "Touch for Restart";
-				}
-				restart = true;
-				break;
-			}
-		}
-	}
+    private IEnumerator SpawnWaves()
+    {
+        yield return new WaitForSeconds(startWait);
+        while (true)
+        {
+            for (int i = 0; i < hazardCount; i++)
+            {
+                Vector3 spawnPosition = new Vector3(Random.Range(-spawnValues.x, spawnValues.x), spawnValues.y, spawnValues.z);
+                Quaternion spawnRotation = Quaternion.identity;
+                GameObject hazard = hazards[Random.Range(0, hazards.Length)];
+                Instantiate(hazard, spawnPosition, spawnRotation);
+                yield return new WaitForSeconds(spawnWait);
+            }
+            yield return new WaitForSeconds(waveWait);
 
-	void UpdateScore() {
-		scoreText.text = "Score: " + score;
-	}
+            if (gameOver)
+            {
+                if (SystemInfo.deviceType == DeviceType.Desktop)
+                {
+                    gameOverText.text = "";
+                    restartText.text = "Press 'R' for Restart";
+                }
+                else
+                {
+                    gameOverText.text = "";
+                    restartText.text = "Touch for Restart";
+                }
+                restart = true;
+                break;
+            }
+        }
+    }
 
-	public void AddScore(int newScore) {
-		score += newScore;
-		UpdateScore();
-	}
+    void UpdateScore()
+    {
+        scoreText.text = "Score: " + score;
+    }
 
-	public void GameOver() {
-		gameOverText.text = "Game Over!!";
-		gameOver = true;
-	}
+    public void AddScore(int newScore)
+    {
+        score += newScore;
+        UpdateScore();
+    }
+
+    public void GameOver()
+    {
+        gameOverText.text = "Game Over!!";
+        gameOver = true;
+    }
 }
